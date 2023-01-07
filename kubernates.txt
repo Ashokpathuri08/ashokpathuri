@@ -1,0 +1,225 @@
+C:\Users\ustjavafsdb401>minikube version
+minikube version: v1.28.0
+commit: 986b1ebd987211ed16f8cc10aed7d2c42fc8392f
+
+C:\Users\ustjavafsdb401>minikube start --driver=docker
+* minikube v1.28.0 on Microsoft Windows 10 Pro 10.0.19044 Build 19044
+* Using the docker driver based on user configuration
+* Using Docker Desktop driver with root privileges
+* Starting control plane node minikube in cluster minikube
+* Pulling base image ...
+* Downloading Kubernetes v1.25.3 preload ...
+    > preloaded-images-k8s-v18-v1...:  385.44 MiB / 385.44 MiB  100.00% 34.83 M
+    > gcr.io/k8s-minikube/kicbase:  386.27 MiB / 386.27 MiB  100.00% 15.23 MiB
+    > gcr.io/k8s-minikube/kicbase:  0 B [________________________] ?% ? p/s 45s
+* Creating docker container (CPUs=2, Memory=2200MB) ...
+* Preparing Kubernetes v1.25.3 on Docker 20.10.20 ...
+  - Generating certificates and keys ...
+  - Booting up control plane ...
+  - Configuring RBAC rules ...
+* Verifying Kubernetes components...
+  - Using image gcr.io/k8s-minikube/storage-provisioner:v5
+! Executing "docker container inspect minikube --format={{.State.Status}}" took an unusually long time: 3.3553492s
+* Restarting the docker service may improve performance.
+* Enabled addons: storage-provisioner, default-storageclass
+* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+C:\Users\ustjavafsdb401>minikube status
+! Executing "docker container inspect minikube --format={{.State.Status}}" took an unusually long time: 3.335413s
+* Restarting the docker service may improve performance.
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+
+C:\Users\ustjavafsdb401>kubectl cluster-info
+Kubernetes control plane is running at https://127.0.0.1:50283
+CoreDNS is running at https://127.0.0.1:50283/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
+C:\Users\ustjavafsdb401>kubectl get node
+NAME       STATUS   ROLES           AGE    VERSION
+minikube   Ready    control-plane   117s   v1.25.3
+
+C:\Users\ustjavafsdb401>minikube docker-env
+! Executing "docker container inspect minikube --format={{.State.Status}}" took an unusually long time: 4.0980269s
+* Restarting the docker service may improve performance.
+SET DOCKER_TLS_VERIFY=1
+SET DOCKER_HOST=tcp://127.0.0.1:50285
+SET DOCKER_CERT_PATH=C:\Users\ustjavafsdb401\.minikube\certs
+SET MINIKUBE_ACTIVE_DOCKERD=minikube
+REM To point your shell to minikube's docker-daemon, run:
+REM @FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env --shell cmd') DO @%i
+
+C:\Users\ustjavafsdb401>@FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env --shell cmd') DO @%i
+
+C:\Users\ustjavafsdb401>docker images
+REPOSITORY                                TAG       IMAGE ID       CREATED         SIZE
+registry.k8s.io/kube-apiserver            v1.25.3   0346dbd74bcb   2 months ago    128MB
+registry.k8s.io/kube-scheduler            v1.25.3   6d23ec0e8b87   2 months ago    50.6MB
+registry.k8s.io/kube-controller-manager   v1.25.3   603999231275   2 months ago    117MB
+registry.k8s.io/kube-proxy                v1.25.3   beaaf00edd38   2 months ago    61.7MB
+registry.k8s.io/pause                     3.8       4873874c08ef   6 months ago    711kB
+registry.k8s.io/etcd                      3.5.4-0   a8a176a5d5d6   7 months ago    300MB
+registry.k8s.io/coredns/coredns           v1.9.3    5185b96f0bec   7 months ago    48.8MB
+k8s.gcr.io/pause                          3.6       6270bb605e12   16 months ago   683kB
+gcr.io/k8s-minikube/storage-provisioner   v5        6e38f40d628d   21 months ago   31.5MB
+
+C:\Users\ustjavafsdb401>cd C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>docker build -t springboot-k8s-demo:1.0 .
+Sending build context to Docker daemon  17.69MB
+Step 1/4 : FROM openjdk:8
+8: Pulling from library/openjdk
+001c52e26ad5: Pull complete
+d9d4b9b6e964: Pull complete
+2068746827ec: Pull complete
+9daef329d350: Pull complete
+d85151f15b66: Pull complete
+52a8c426d30b: Pull complete
+8754a66e0050: Pull complete
+Digest: sha256:86e863cc57215cfb181bd319736d0baf625fe8f150577f9eb58bd937f5452cb8
+Status: Downloaded newer image for openjdk:8
+ ---> b273004037cc
+Step 2/4 : EXPOSE 8080
+ ---> Running in 1e89268dce3b
+Removing intermediate container 1e89268dce3b
+ ---> f96594ea3eba
+Step 3/4 : ADD target/springboot-k8s-demo.jar springboot-k8s-demo.jar
+ ---> dea553e6ddbc
+Step 4/4 : ENTRYPOINT ["java","-jar","/springboot-k8s-demo.jar"]
+ ---> Running in 3a916b45f4be
+Removing intermediate container 3a916b45f4be
+ ---> 68cc05007b67
+Successfully built 68cc05007b67
+Successfully tagged springboot-k8s-demo:1.0
+SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have '-rwxr-xr-x' permissions. It is recommended to double check and reset permissions for sensitive files and directories.
+
+Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>docker images
+REPOSITORY                                TAG       IMAGE ID       CREATED          SIZE
+springboot-k8s-demo                       1.0       68cc05007b67   22 seconds ago   544MB
+registry.k8s.io/kube-apiserver            v1.25.3   0346dbd74bcb   2 months ago     128MB
+registry.k8s.io/kube-scheduler            v1.25.3   6d23ec0e8b87   2 months ago     50.6MB
+registry.k8s.io/kube-controller-manager   v1.25.3   603999231275   2 months ago     117MB
+registry.k8s.io/kube-proxy                v1.25.3   beaaf00edd38   2 months ago     61.7MB
+openjdk                                   8         b273004037cc   5 months ago     526MB
+registry.k8s.io/pause                     3.8       4873874c08ef   6 months ago     711kB
+registry.k8s.io/etcd                      3.5.4-0   a8a176a5d5d6   7 months ago     300MB
+registry.k8s.io/coredns/coredns           v1.9.3    5185b96f0bec   7 months ago     48.8MB
+k8s.gcr.io/pause                          3.6       6270bb605e12   16 months ago    683kB
+gcr.io/k8s-minikube/storage-provisioner   v5        6e38f40d628d   21 months ago    31.5MB
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>kubectl create deployment spring-boot-k8s --image=springboot-k8s-demo:1.0 --port=8080
+deployment.apps/spring-boot-k8s created
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>kubectl get deployment
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE
+spring-boot-k8s   1/1     1            1           29s
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>kubectl describe- deployment springboot-k8s
+error: unknown command "describe-" for "kubectl"
+
+Did you mean this?
+        describe
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>kubectl describe deployment spring-boot-k8s
+Name:                   spring-boot-k8s
+Namespace:              default
+CreationTimestamp:      Fri, 06 Jan 2023 17:12:33 +0530
+Labels:                 app=spring-boot-k8s
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=spring-boot-k8s
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=spring-boot-k8s
+  Containers:
+   springboot-k8s-demo:
+    Image:        springboot-k8s-demo:1.0
+    Port:         8080/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   spring-boot-k8s-7c9884547b (1/1 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  2m25s  deployment-controller  Scaled up replica set spring-boot-k8s-7c9884547b to 1
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>kubectl get pods
+NAME                               READY   STATUS    RESTARTS   AGE
+spring-boot-k8s-7c9884547b-x7p7f   1/1     Running   0          2m51s
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>kubectl logs spring-boot-k8s-7c9884547b-x7p7f
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.6.1)
+
+2023-01-06 11:42:37.511  INFO 1 --- [           main] c.j.k8s.SpringbootK8sDemoApplication     : Starting SpringbootK8sDemoApplication v0.0.1-SNAPSHOT using Java 1.8.0_342 on spring-boot-k8s-7c9884547b-x7p7f with PID 1 (/springboot-k8s-demo.jar started by root in /)
+2023-01-06 11:42:37.514  INFO 1 --- [           main] c.j.k8s.SpringbootK8sDemoApplication     : No active profile set, falling back to default profiles: default
+2023-01-06 11:42:39.457  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-01-06 11:42:39.473  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-01-06 11:42:39.474  INFO 1 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.55]
+2023-01-06 11:42:39.640  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-01-06 11:42:39.641  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1999 ms
+2023-01-06 11:42:40.662  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-01-06 11:42:40.677  INFO 1 --- [           main] c.j.k8s.SpringbootK8sDemoApplication     : Started SpringbootK8sDemoApplication in 4.17 seconds (JVM running for 5.257)
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>kubectl get deployments
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE
+spring-boot-k8s   1/1     1            1           4m10s
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>kubectl expose deployment spring-boot-k8s --type=NodePort
+service/spring-boot-k8s exposed
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>kubectl get service
+NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+kubernetes        ClusterIP   10.96.0.1      <none>        443/TCP          14m
+spring-boot-k8s   NodePort    10.97.14.119   <none>        8080:32486/TCP   31s
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>minikube dashboard
+* Enabling dashboard ...
+  - Using image docker.io/kubernetesui/dashboard:v2.7.0
+  - Using image docker.io/kubernetesui/metrics-scraper:v1.0.8
+* Some dashboard features require the metrics-server addon. To enable all features please run:
+
+        minikube addons enable metrics-server
+
+
+* Verifying dashboard health ...
+* Launching proxy ...
+* Verifying proxy health ...
+* Opening http://127.0.0.1:53202/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+^C
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>minikube service spring-boot-k8s --url
+http://127.0.0.1:53518
+! Because you are using a Docker driver on windows, the terminal needs to be open to run it.
+
+C:\Users\ustjavafsdb401\Downloads\springboot-k8s-example-main>minikube dashboard
+! Executing "docker container inspect minikube --format={{.State.Status}}" took an unusually long time: 2.4719408s
+* Restarting the docker service may improve performance.
+* Verifying dashboard health ...
+* Launching proxy ...
+* Verifying proxy health ...
+* Opening http://127.0.0.1:53625/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+

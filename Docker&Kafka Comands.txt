@@ -1,0 +1,21 @@
+ 1)DOCKER WITH SPRING BOOT COMMANDS:-
+
+docker build -t spring-boot-docker.jar
+docker run -p 9090:8080 spring-boot-docker.jar
+
+2)DOCKER WITH SPRING BOOT AND MYSQL COMMANDS:-
+
+docker pull 
+mysql docker run -d -p 6033:3306 --name=mysql-docker --env="MYSQL_ROOT_PASSWORD=root" --env="MYSQL_PASSWORD=root" --env="MYSQL_DATABASE=demo" 
+mysql 
+docker container ls 
+docker exec -it mysql-docker bash mysql -uroot -proot show databases; 
+use demo; 
+show tables;
+
+KAFKA COMMANDS:-
+zookeeper-server-start.bat D:\DEV-SOFTWARES\kafka_2.12-1.1.0\config\zookeeper.properties
+kafka-server-start.bat D:\DEV-SOFTWARES\kafka_2.12-1.1.0\config\server.properties
+kafka-topics.bat --create --topic test-topic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 4
+kafka-console-producer.bat --broker-list localhost:9092 --topic javatechie
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic javatechie
